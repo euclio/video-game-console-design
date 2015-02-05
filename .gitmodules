@@ -1,0 +1,3 @@
+[submodule "lab2/arduino-cmake"]
+	path = lab2/arduino-cmake
+	url = git://github.com/queezythegreat/arduino-cmake.git
