@@ -6,6 +6,8 @@ set(PROJECT_NAME controller_firmware)
 
 project(${PROJECT_NAME} C CXX)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall")
+
 set(SERIAL_BAUD 9600)
 
 add_definitions(-DSERIAL_BAUD=${SERIAL_BAUD})

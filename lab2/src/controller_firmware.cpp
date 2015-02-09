@@ -10,31 +10,33 @@
 #define SERIAL_BAUD 9800
 #endif
 
+using pin = int;
+
 // Mappings from buttons to pins
-const int faceButtonRight = 2;
-const int faceButtonUp = 3;
-const int faceButtonLeft = 4;
-const int faceButtonDown = 5;
+const pin faceButtonRight = 2;
+const pin faceButtonUp = 3;
+const pin faceButtonLeft = 4;
+const pin faceButtonDown = 5;
 
-const int dPadRight = 6;
-const int dPadUp = 7;
-const int dPadLeft = 8;
-const int dPadDown = 9;
+const pin dPadRight = 6;
+const pin dPadUp = 7;
+const pin dPadLeft = 8;
+const pin dPadDown = 9;
 
-const int rightShoulderButton = 10;
-const int leftShoulderButton = 11;
+const pin rightShoulderButton = 10;
+const pin leftShoulderButton = 11;
 
-const int turboSwitch = 12;
+const pin turboSwitch = 12;
 
-const int leftJoystickX = A0;
-const int leftJoystickY = A1;
-const int leftJoystickButton = A2;
+const pin leftJoystickX = A0;
+const pin leftJoystickY = A1;
+const pin leftJoystickButton = A2;
 
-const int rightJoystickX = A3;
-const int rightJoystickY = A4;
-const int rightJoystickButton = A5;
+const pin rightJoystickX = A3;
+const pin rightJoystickY = A4;
+const pin rightJoystickButton = A5;
 
-const int LED = 13;
+const pin LED = 13;
 
 // The largest and smallest possible values from an analog reading.
 const int analogMin = 0;
@@ -87,7 +89,7 @@ void setup() {
  * Given a pin, if the pin is low then register a key press, otherwise the key
  * is released.
  */
-inline void mapButton(int pin, char key) {
+inline void mapButton(pin pin, char key) {
     int buttonState = digitalRead(pin);
 
     if (buttonState == LOW) {
@@ -111,7 +113,7 @@ inline void mapButton(int pin, char key) {
  * are likely to be used for movement or camera control, which means that turbo
  * would likely only serve as a hindrance.
  */
-inline void mapAnalogKey(int pin, char keyMin, char keyMax) {
+inline void mapAnalogKey(pin pin, char keyMin, char keyMax) {
     int pinValue = analogRead(pin);
 
     if (pinValue < analogMin + analogThreshold) {
@@ -130,7 +132,7 @@ inline void mapAnalogKey(int pin, char keyMin, char keyMax) {
  * Defines which mouse button should be pressed when a pin reads low. Works
  * similarly to mapButton, though turbo is not enabled.
  */
-inline void mapMouseButton(int pin, int mouseButton) {
+inline void mapMouseButton(pin pin, int mouseButton) {
     int buttonState = digitalRead(pin);
 
     if (buttonState == LOW) {
@@ -143,13 +145,13 @@ inline void mapMouseButton(int pin, int mouseButton) {
 /*
  * Defines the analog pins that should move the mouse.
  */
-inline void mapMouseMove(int xAxisPin, int yAxisPin) {
+inline void mapMouseMove(pin xAxis, pin yAxis) {
     const int analogMid = analogMax / 2;
 
     // Get the difference between the potentiometer readings and the absolute
     // middle of the analog range.
-    int dx = analogRead(xAxisPin) - analogMid;
-    int dy = analogMid - analogRead(yAxisPin);
+    int dx = analogRead(xAxis) - analogMid;
+    int dy = analogMid - analogRead(yAxis);
 
     // If the reading is greater than the threshold, then we will move the
     // mouse by the reading (multiplied by the sensitivity). If it's not, then
