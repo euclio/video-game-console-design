@@ -83,8 +83,8 @@ of the time was dedicated to finding the correct parameters to log in the
 codebase. We spent about 30 minutes performing the actual testing.
 
 Unfortunately there are few conclusions that we can draw from our data. Some of
-the factors that contribute to this is the fact that we were biased (Bryan and I
-spent a lot of time testing on our own controllers) and that we did not have a
+the factors that contributed to this is the fact that we were biased (Bryan and
+I spent a lot of time testing on our own controllers) and that we did not have a
 tremendous amount of data. There was also a skill gap between Bryan and I and
 our friend, as Jono had never played Lugaru before. If we were to perform this
 experiment again, we would definitely attempt to find more participants and
