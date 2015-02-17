@@ -91,7 +91,7 @@ experiment again, we would definitely attempt to find more participants and
 perhaps abstain from using our own controllers.
 
 [lugaru-homepage]: http://www.wolfire.com/lugaru
-[bryans-writeup]: https://github.com/ajinomoto124/E190uLab3
+[bryans-writeup]: https://github.com/ajinomoto124/E190uLab3/blob/master/lE190uLab3.md
 [Globals.cpp]: https://github.com/euclio/lugaru/blob/master/Source/Globals.cpp
 [my controller]: https://github.com/euclio/lugaru/blob/master/andy_tests.csv
 [Bryan's controller]: https://github.com/euclio/lugaru/blob/master/tests.csv
