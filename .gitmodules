@@ -1,3 +1,6 @@
 [submodule "lab2/arduino-cmake"]
 	path = lab2/arduino-cmake
 	url = git://github.com/queezythegreat/arduino-cmake.git
+[submodule "lab3/lugaru"]
+	path = lab3/lugaru
+	url = https://github.com/euclio/lugaru
