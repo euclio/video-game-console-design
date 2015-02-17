@@ -71,7 +71,9 @@ Here is a summary of the averages for each set of data:
 Given the data that we obtained, I would be inclined to say that Bryan's
 controller performs slightly better than mine. Of course, his controller was
 associated with more wins, but players were also more effective in performing
-attacks in general. Interestingly, players were more likely to perform reversals
+attacks in general, and also receiving score. Score is a particularly
+interesting stat because it corresponds to more effective attacks such as double
+hits and combos. Interestingly, players were more likely to perform reversals
 with my controller (which I attribute to Bryan's controller mapping "crouch" to
 a shoulder button). However, reversals are a higher-risk strategy, which might
 have contributed to my controller having fewer wins.
