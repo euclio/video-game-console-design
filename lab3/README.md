@@ -70,11 +70,11 @@ Here is a summary of the averages for each set of data:
 
 Given the data that we obtained, I would be inclined to say that Bryan's
 controller performs slightly better than mine. Of course, his controller was
-associated with more wins, but players were also more inclined to use reversals,
-which turns out to be a very effective strategy in Lugaru. Interestingly, my
-controller performed better in landing kicks and score (which are likely
-related). This leads me to believe that controller may be slightly more precise
-in performing kick actions or receiving bonuses.
+associated with more wins, but players were also more effective in performing
+attacks in general. Interestingly, players were more likely to perform reversals
+with my controller (which I attribute to Bryan's controller mapping "crouch" to
+a shoulder button). However, reversals are a higher-risk strategy, which might
+have contributed to my controller having fewer wins.
 
 ## Conclusion
 
