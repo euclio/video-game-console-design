@@ -71,6 +71,11 @@ __device__ uchar4 getPixel(int x, int y)
     <----tilew---->
 */
 
+__device__ const float boxBlur[][3] = {{1/9.0f, 1/9.0f, 1/9.0f}, {1/9.0f, 1/9.0f, 1/9.0f}, {1/9.0f, 1/9.0f, 1/9.0f}};
+__device__ const float edgeDetect[][3] = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
+__device__ const float sharpen[][3] = {{0, -1, 0}, {-1, 5, -1}, {0, -1, 0}};
+__device__ const float tooEdgy4Me[][3] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
+
 __global__ void
 cudaProcess(unsigned int *g_odata, int imgw, int imgh,
             int tilew, int r, float threshold, float highlight)
@@ -84,10 +89,6 @@ cudaProcess(unsigned int *g_odata, int imgw, int imgh,
     int x = blockIdx.x*bw + tx;
     int y = blockIdx.y*bh + ty;
 
-#if 0
-    uchar4 c4 = getPixel(x, y);
-    g_odata[y*imgw+x] = rgbToInt(c4.z, c4.y, c4.x);
-#else
     // copy tile to shared memory
     // center region
     SMEM(r + tx, r + ty) = getPixel(x, y);
@@ -135,48 +136,33 @@ cudaProcess(unsigned int *g_odata, int imgw, int imgh,
     {
         for (int dx=-r; dx<=r; dx++)
         {
-#if 0
-            // try this to see the benefit of using shared memory
-            uchar4 pixel = getPixel(x+dx, y+dy);
-#else
             uchar4 pixel = SMEM(r+tx+dx, r+ty+dy);
-#endif
 
-            // only sum pixels within disc-shaped kernel
-            float l = dx*dx + dy*dy;
+            float kernelVal = tooEdgy4Me[dy + r][dx + r];
 
-            if (l <= r*r)
-            {
-                float r = float(pixel.x);
-                float g = float(pixel.y);
-                float b = float(pixel.z);
-#if 1
-                // brighten highlights
-                float lum = (r + g + b) / (255*3);
+            float red = float(pixel.x);
+            float green = float(pixel.y);
+            float blue = float(pixel.z);
 
-                if (lum > threshold)
-                {
-                    r *= highlight;
-                    g *= highlight;
-                    b *= highlight;
-                }
+            // brighten highlights
+            float lum = (red + green + blue) / (255*3);
 
-#endif
-                rsum += r;
-                gsum += g;
-                bsum += b;
-                samples += 1.0f;
+            if (lum > threshold) {
+                red *= highlight;
+                green *= highlight;
+                blue *= highlight;
             }
+
+            rsum += red * kernelVal;
+            gsum += green * kernelVal;
+            bsum += blue * kernelVal;
+            samples += 1.0f;
         }
     }
 
-    rsum /= samples;
-    gsum /= samples;
-    bsum /= samples;
     // ABGR
     g_odata[y*imgw+x] = rgbToInt(rsum, gsum, bsum);
     //g_odata[y*imgw+x] = rgbToInt(x,y,0);
-#endif
 }
 
 extern "C" void

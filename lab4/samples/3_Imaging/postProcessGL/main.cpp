@@ -119,7 +119,7 @@ float rotate[3];
 char *ref_file       = NULL;
 bool enable_cuda     = true;
 bool animate         = true;
-int  blur_radius     = 8;
+int  blur_radius     = 1;
 int  max_blur_radius = 16;
 
 int   *pArgc = NULL;
