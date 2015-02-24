@@ -68,6 +68,9 @@ __device__ const float sharpen[][3] = {{0, -1, 0}, {-1, 5, -1}, {0, -1, 0}};
 __device__ const float alternateEdge[][3] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
 ```
 
+The changes I made to the CUDA source to support a convolution martrix are located
+[here](https://github.com/euclio/video-game-console-design/commit/53477a434ff967a6f8a80c6c99bc7165485f8ffc).
+
 Each of the kernels performs as expected, with the `edgeDetect` and `sharpen`
 working particularly nicely. The `boxBlur` kernel looks almost exactly the same
 as the original filter (though it uses a square filter instead of a radial one).
