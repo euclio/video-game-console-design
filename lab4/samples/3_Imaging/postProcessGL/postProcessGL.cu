@@ -71,10 +71,11 @@ __device__ uchar4 getPixel(int x, int y)
     <----tilew---->
 */
 
+__device__ const float identity[][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
 __device__ const float boxBlur[][3] = {{1/9.0f, 1/9.0f, 1/9.0f}, {1/9.0f, 1/9.0f, 1/9.0f}, {1/9.0f, 1/9.0f, 1/9.0f}};
 __device__ const float edgeDetect[][3] = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
 __device__ const float sharpen[][3] = {{0, -1, 0}, {-1, 5, -1}, {0, -1, 0}};
-__device__ const float tooEdgy4Me[][3] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
+__device__ const float alternateEdge[][3] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
 
 __global__ void
 cudaProcess(unsigned int *g_odata, int imgw, int imgh,
@@ -138,7 +139,7 @@ cudaProcess(unsigned int *g_odata, int imgw, int imgh,
         {
             uchar4 pixel = SMEM(r+tx+dx, r+ty+dy);
 
-            float kernelVal = tooEdgy4Me[dy + r][dx + r];
+            float kernelVal = alternateEdge[dy + r][dx + r];
 
             float red = float(pixel.x);
             float green = float(pixel.y);
