@@ -72,6 +72,26 @@ Each of the kernels performs as expected, with the `edgeDetect` and `sharpen`
 working particularly nicely. The `boxBlur` kernel looks almost exactly the same
 as the original filter (though it uses a square filter instead of a radial one).
 
+### Identity
+
+![](./img/identity.png)
+
+### Box Blur
+
+![](./img/boxBlur.png)
+
+### Edge Detection
+
+![](./img/edgeDetect.png)
+
+### Sharpen
+
+![](./img/sharpen.png)
+
+### Alternate Edge Detection
+
+![](./img/altEdge.png)
+
 ## Conclusion
 
 In total, I spent about 4 hours on this lab. Most of the time was dedicated to
