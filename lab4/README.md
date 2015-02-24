@@ -30,18 +30,25 @@ By using different values for our kernel, it is possible to make a wide range of
 different image transformations.
 
 My goal was to support a wide range of transformations while requiring as little
-change to the original source as possible.
+change to the original source as possible. Thus, I modified the source to
+support using various convolution matrices instead of requiring a box blur
+(though the source did not use a convulation matrix initially, the CUDA process
+was essentially calculating a convolution).
 
 ## Testing Methodology
 
 Thankfully, the demo makes it very easy to test different types of
-post-processing. The demo allows the user to toggle the CUDA processing on and
-off by pressing spacebar, so it was possible to see the difference between my
-changes almost instantly.
+post-processing. The user may toggle the CUDA processing on and off by pressing
+spacebar, so it was possible to see the difference between no processing and the
+matrix being tested almost instantly.
 
-As for seeing if my matrices worked as expected, I simply compared the image
-output from the demo to the image/kernel pairs provided on [the kernel Wikipedia
-page][kernel-page].
+To see if my convolution matrices worked as expected, I simply visually compared
+the image output from the demo to the image/kernel pairs provided on [the kernel
+Wikipedia page][kernel-page].
+
+I also modified the main function to start the radius of the convolution at 1,
+as that is the only radius that works as expected (other radii invoke undefined
+behavior by reading past the bounds of the convolution matrix).
 
 ## Results and Discussion
 
@@ -69,6 +76,7 @@ as the original filter (though it uses a square filter instead of a radial one).
 
 In total, I spent about 4 hours on this lab. Most of the time was dedicated to
 understanding how the demo calculated the blur. I also encountered a few
-problems with getting the kernel to play nice with the luminosity calculation.
+problems with getting the kernel to play nice with the luminosity calculation,
+as it was easy to accidentally post-process all of the pixels to white.
 
-[kernel-page]: http://en.wikipedia.org/wiki/Kernel_%28image_processing%29
+[kernel-page]: http://en.wikipedia.org/wiki/Kernel_%28image_processing%29#Details
