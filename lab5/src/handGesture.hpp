@@ -1,63 +1,56 @@
-#ifndef _HAND_GESTURE_
-#define _HAND_GESTURE_ 
+#ifndef HAND_GESTURE_HPP
+#define HAND_GESTURE_HPP
 
 #include <opencv2/imgproc/imgproc.hpp>
-#include<opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include <string>
-#include "main.hpp"
 #include "myImage.hpp"
 
-using namespace cv;
-using namespace std;
-
 class HandGesture{
-	public:
-		MyImage m;
-		HandGesture();
-		vector<vector<Point> > contours;
-		vector<vector<int> >hullI;
-		vector<vector<Point> >hullP;
-		vector<vector<Vec4i> > defects;	
-		vector <Point> fingerTips;
-		Rect rect;
-		void printGestureInfo(Mat src);
-		int cIdx;
-		int frameNumber;
-		int mostFrequentFingerNumber;
-		int nrOfDefects;
-		Rect bRect;
-		double bRect_width;
-		double bRect_height;
-		bool isHand;
-		bool detectIfHand();
-		void initVectors();
-		void getFingerNumber(MyImage *m);
-		void eleminateDefects(MyImage *m);
-		void getFingerTips(MyImage *m);
-		void drawFingerTips(MyImage *m);
-	private:
-		string bool2string(bool tf);
-		int fontFace;
-		int prevNrFingerTips;
-		void checkForOneFinger(MyImage *m);
-		float getAngle(Point s,Point f,Point e);	
-		vector<int> fingerNumbers;
-		void analyzeContours();
-		string intToString(int number);
-		void computeFingerNumber();
-		void drawNewNumber(MyImage *m);
-		void addNumberToImg(MyImage *m);
-		vector<int> numbers2Display;
-		void addFingerNumberToVector();
-		Scalar numberColor;
-		int nrNoFinger;
-		float distanceP2P(Point a,Point b);
-		void removeRedundantEndPoints(vector<Vec4i> newDefects,MyImage *m);
-		void removeRedundantFingerTips();
+    public:
+        MyImage m;
+        HandGesture();
+        std::vector<std::vector<cv::Point>> contours;
+        std::vector<std::vector<int>> hullI;
+        std::vector<std::vector<cv::Point>> hullP;
+        std::vector<std::vector<cv::Vec4i>> defects;
+        std::vector<cv::Point> fingerTips;
+        cv::Rect rect;
+        void printGestureInfo(cv::Mat src);
+        int cIdx;
+        int frameNumber;
+        int mostFrequentFingerNumber;
+        int nrOfDefects;
+        cv::Rect bRect;
+        double bRect_width;
+        double bRect_height;
+        bool isHand;
+        bool detectIfHand();
+        void initVectors();
+        void getFingerNumber(MyImage *m);
+        void eleminateDefects(MyImage *m);
+        void getFingerTips(MyImage *m);
+        void drawFingerTips(MyImage *m);
+    private:
+        std::string bool2string(bool tf);
+        int fontFace;
+        int prevNrFingerTips;
+        void checkForOneFinger(MyImage *m);
+        float getAngle(cv::Point s, cv::Point f, cv::Point e);
+        std::vector<int> fingerNumbers;
+        void analyzeContours();
+        std::string intToString(int number);
+        void computeFingerNumber();
+        void drawNewNumber(MyImage *m);
+        void addNumberToImg(MyImage *m);
+        std::vector<int> numbers2Display;
+        void addFingerNumberToVector();
+        cv::Scalar numberColor;
+        int nrNoFinger;
+        float distanceP2P(cv::Point a, cv::Point b);
+        void removeRedundantEndPoints(std::vector<cv::Vec4i> newDefects, MyImage *m);
+        void removeRedundantFingerTips();
 };
 
-
-
-
-#endif
+#endif // HAND_GESTURE_HPP
