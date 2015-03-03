@@ -70,19 +70,15 @@ bool HandGesture::detectIfHand() {
     return isHand;
 }
 
-float HandGesture::distanceP2P(cv::Point a, cv::Point b) {
-    float d = sqrt(fabs(pow(a.x - b.x, 2) + pow(a.y - b.y, 2))) ;
-    return d;
-}
-
 // remove fingertips that are too close to
 // eachother
 void HandGesture::removeRedundantFingerTips() {
     std::vector<cv::Point> newFingers;
 
-    for(int i = 0; i < fingerTips.size(); i++) {
-        for(int j = i; j < fingerTips.size(); j++) {
-            if(distanceP2P(fingerTips[i], fingerTips[j]) < 10 && i != j) {
+    for (int i = 0; i < fingerTips.size(); i++) {
+        for (int j = i; j < fingerTips.size(); j++) {
+            if (cv::norm(fingerTips[i] - fingerTips[j]) < 10 && i != j) {
+                // Do nothing
             } else {
                 newFingers.push_back(fingerTips[i]);
                 break;
@@ -174,8 +170,8 @@ void HandGesture::getFingerNumber(MyImage *m) {
 }
 
 float HandGesture::getAngle(cv::Point s, cv::Point f, cv::Point e) {
-    float l1 = distanceP2P(f, s);
-    float l2 = distanceP2P(f, e);
+    float l1 = cv::norm(f - s);
+    float l2 = cv::norm(f - e);
     float dot = (s.x - f.x) * (e.x - f.x) + (s.y - f.y) * (e.y - f.y);
     float angle = acos(dot / (l1 * l2));
     angle = angle * 180 / M_PI;
@@ -198,9 +194,13 @@ void HandGesture::eleminateDefects(MyImage *m) {
         faridx = v[2];
         cv::Point ptFar(contours[cIdx][faridx]);
 
-        if(distanceP2P(ptStart, ptFar) > tolerance && distanceP2P(ptEnd, ptFar) > tolerance && getAngle(ptStart, ptFar, ptEnd) < angleTol) {
-            if(ptEnd.y > (bRect.y + bRect.height - bRect.height / 4)) {
+        if (cv::norm(ptStart - ptFar) > tolerance
+                && cv::norm(ptEnd - ptFar) > tolerance
+                && getAngle(ptStart, ptFar, ptEnd) < angleTol) {
+            if (ptEnd.y > (bRect.y + bRect.height - bRect.height / 4)) {
+                // Do nothing
             } else if(ptStart.y > (bRect.y + bRect.height - bRect.height / 4)) {
+                // Do nothing
             } else {
                 newDefects.push_back(v);
             }
@@ -233,12 +233,12 @@ void HandGesture::removeRedundantEndPoints(std::vector<cv::Vec4i> newDefects, My
             endidx2 = newDefects[j][1];
             cv::Point ptEnd2(contours[cIdx][endidx2]);
 
-            if(distanceP2P(ptStart, ptEnd2) < tolerance) {
+            if (cv::norm(ptStart - ptEnd2) < tolerance) {
                 contours[cIdx][startidx] = ptEnd2;
                 break;
             }
 
-            if(distanceP2P(ptEnd, ptStart2) < tolerance) {
+            if (cv::norm(ptEnd - ptStart2) < tolerance) {
                 contours[cIdx][startidx2] = ptEnd;
             }
         }
