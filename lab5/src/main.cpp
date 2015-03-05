@@ -372,22 +372,28 @@ int main() {
     initWindows(m);
     initTrackbars();
 
-    cv::gpu::GpuMat d_src, result;
-
     for(;;) {
         hg.frameNumber++;
         m.cap >> m.src;
 
         cv::flip(m.src, m.src, 1);
 
-        d_src.upload(m.src);
-        cv::gpu::pyrDown(d_src, result);
-        result.download(m.srcLR);
+        m.d_src.upload(m.src);
+        cv::gpu::pyrDown(m.d_src, m.d_srcLR);
+        m.d_srcLR.download(m.srcLR);
 
         cv::blur(m.srcLR, m.srcLR, cv::Size(3, 3));
-        cv::cvtColor(m.srcLR, m.srcLR, ORIGCOL2COL);
+        m.d_srcLR.upload(m.srcLR);
+
+        cv::gpu::cvtColor(m.d_srcLR, m.d_srcLR, ORIGCOL2COL);
+        m.d_srcLR.download(m.srcLR);
+
         produceBinaries(&m);
-        cv::cvtColor(m.srcLR, m.srcLR, COL2ORIGCOL);
+        m.d_srcLR.upload(m.srcLR);
+
+        cv::gpu::cvtColor(m.d_srcLR, m.d_srcLR, COL2ORIGCOL);
+        m.d_srcLR.download(m.srcLR);
+
         makeContours(&m, &hg);
         hg.getFingerNumber(&m);
 

@@ -11,7 +11,9 @@ public:
     MyImage(int webCamera);
     MyImage();
     cv::Mat srcLR;
+    cv::gpu::GpuMat d_srcLR;
     cv::Mat src;
+    cv::gpu::GpuMat d_src;
     cv::Mat bw;
     std::vector<cv::Mat> bwList;
     cv::VideoCapture cap;
