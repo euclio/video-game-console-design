@@ -264,7 +264,7 @@ void showWindows(MyImage m) {
     std::vector<cv::Mat> channels;
     cv::Mat result;
 
-    for(int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
         channels.push_back(m.bw);
 
     merge(channels, result);
@@ -276,8 +276,8 @@ int findBiggestContour(std::vector<std::vector<cv::Point>> contours) {
     int indexOfBiggestContour = -1;
     int sizeOfBiggestContour = 0;
 
-    for(int i = 0; i < contours.size(); i++) {
-        if(contours[i].size() > sizeOfBiggestContour) {
+    for (int i = 0; i < contours.size(); i++) {
+        if (contours[i].size() > sizeOfBiggestContour) {
             sizeOfBiggestContour = contours[i].size();
             indexOfBiggestContour = i;
         }
@@ -372,17 +372,25 @@ int main() {
     initWindows(m);
     initTrackbars();
 
+    cv::gpu::GpuMat d_src, result;
+
     for(;;) {
         hg.frameNumber++;
         m.cap >> m.src;
-        flip(m.src, m.src, 1);
-        pyrDown(m.src, m.srcLR);
-        blur(m.srcLR, m.srcLR, cv::Size(3, 3));
-        cvtColor(m.srcLR, m.srcLR, ORIGCOL2COL);
+
+        cv::flip(m.src, m.src, 1);
+
+        d_src.upload(m.src);
+        cv::gpu::pyrDown(d_src, result);
+        result.download(m.srcLR);
+
+        cv::blur(m.srcLR, m.srcLR, cv::Size(3, 3));
+        cv::cvtColor(m.srcLR, m.srcLR, ORIGCOL2COL);
         produceBinaries(&m);
-        cvtColor(m.srcLR, m.srcLR, COL2ORIGCOL);
+        cv::cvtColor(m.srcLR, m.srcLR, COL2ORIGCOL);
         makeContours(&m, &hg);
         hg.getFingerNumber(&m);
+
         showWindows(m);
         out << m.src;
 

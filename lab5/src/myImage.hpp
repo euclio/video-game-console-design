@@ -1,9 +1,10 @@
 #ifndef MYIMAGE_HPP
 #define MYIMAGE_HPP
 
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
 #include <vector>
+
+#include <opencv2/gpu/gpu.hpp>
+#include <opencv2/opencv.hpp>
 
 class MyImage {
 public:
