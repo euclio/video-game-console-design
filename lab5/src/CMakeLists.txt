@@ -1,13 +1,16 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+# Don't send the C++11 flag to NVCC, or it will choke.
+set(CUDA_PROPAGATE_HOST_FLAGS OFF)
+
+cuda_compile(FILTER_O medianBlur.cu)
+
 add_executable(handDetection
     main.cpp
-    handGesture.hpp
     handGesture.cpp
-    myImage.hpp
     myImage.cpp
-    roi.hpp
     roi.cpp
+    ${FILTER_O}
 )
 
 target_link_libraries(handDetection ${OpenCV_LIBS})

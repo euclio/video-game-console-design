@@ -1,16 +1,20 @@
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/imgproc/types_c.h"
-#include "opencv2/highgui/highgui_c.h"
-#include <opencv2/opencv.hpp>
+#include <cmath>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
 #include <string>
+#include <vector>
+
+#include "opencv2/gpu/gpu.hpp"
+#include "opencv2/highgui/highgui_c.h"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/imgproc/types_c.h"
+#include <opencv2/opencv.hpp>
+
+#include "handGesture.hpp"
+#include "medianBlur.hpp"
 #include "myImage.hpp"
 #include "roi.hpp"
-#include "handGesture.hpp"
-#include <vector>
-#include <cmath>
 
 const size_t NSAMPLES = 7;
 const int fontFace = cv::FONT_HERSHEY_PLAIN;
@@ -245,7 +249,7 @@ void produceBinaries(MyImage *m) {
         m->bw += m->bwList[i];
     }
 
-    medianBlur(m->bw, m->bw, 7);
+    gpuMedianBlur(m->bw, m->bw);
 }
 
 void initWindows(MyImage m) {
