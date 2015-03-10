@@ -10,6 +10,7 @@ add_executable(handDetection
     handGesture.cpp
     myImage.cpp
     roi.cpp
+    socketServer.cpp
     ${FILTER_O}
 )
 

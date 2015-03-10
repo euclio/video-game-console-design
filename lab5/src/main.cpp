@@ -15,6 +15,7 @@
 #include "medianBlur.hpp"
 #include "myImage.hpp"
 #include "roi.hpp"
+#include "socketServer.hpp"
 
 const size_t NSAMPLES = 7;
 const int fontFace = cv::FONT_HERSHEY_PLAIN;
@@ -371,6 +372,9 @@ int main() {
     cv::destroyWindow("img1");
     initWindows(m);
     initTrackbars();
+    SocketServer server;
+    server.bind_port();
+    server.wait_for_connection();
 
     for(;;) {
         hg.frameNumber++;
