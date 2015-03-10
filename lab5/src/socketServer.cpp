@@ -45,7 +45,26 @@ void SocketServer::wait_for_connection() {
 }
 
 void SocketServer::write_data(const char *buffer, size_t size) {
-    int n = write(sockfd, buffer, size);
+    // We are going to use a rudimentary protocol here. First, we write the
+    // length of the buffer to the socket (padded to 3 digits).
+    size_t numZeros = 0;
+    if (size > 999) {
+        throw new std::runtime_error("Packet too big!");
+    } else if (size > 99) {
+        numZeros = 0;
+    } else if (size > 9) {
+        numZeros = 1;
+    } else {
+        numZeros = 0;
+    }
+
+    std::string packetLength = std::string(numZeros, '0').append(std::to_string(size));
+    int n = write(sockfd, packetLength.c_str(), packetLength.size());
+    if (n < 0) {
+        throw new std::runtime_error("Error writing to socket");
+    }
+
+    n = write(sockfd, buffer, size);
     if (n < 0) {
         throw new std::runtime_error("Error writing to socket");
     }
