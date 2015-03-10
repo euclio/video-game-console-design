@@ -1,16 +1,19 @@
 #ifndef HAND_GESTURE_HPP
 #define HAND_GESTURE_HPP
 
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
 #include <vector>
 #include <string>
+
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+
 #include "myImage.hpp"
+#include "socketServer.hpp"
 
 class HandGesture{
     public:
         MyImage m;
-        HandGesture();
+        HandGesture(SocketServer &server);
         std::vector<std::vector<cv::Point>> contours;
         std::vector<std::vector<int>> hullI;
         std::vector<std::vector<cv::Point>> hullP;
@@ -33,6 +36,7 @@ class HandGesture{
         void getFingerTips(MyImage *m);
         void drawFingerTips(MyImage *m);
     private:
+        SocketServer server;
         std::string bool2string(bool tf);
         int fontFace;
         int prevNrFingerTips;

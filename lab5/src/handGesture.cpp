@@ -1,13 +1,18 @@
 #include "handGesture.hpp"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <stdio.h>
-#include <stdlib.h>
+
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
-HandGesture::HandGesture() {
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+HandGesture::HandGesture(SocketServer &server) : server(server) {
     frameNumber = 0;
     nrNoFinger = 0;
     fontFace = cv::FONT_HERSHEY_PLAIN;
@@ -49,6 +54,19 @@ void HandGesture::printGestureInfo(cv::Mat src) {
 
     info = std::string("Is hand: ") + std::to_string(isHand);
     putText(src, info, cv::Point(ypos, xpos), fontFace, fontSize, fColor);
+
+    rapidjson::Document d;
+    d.SetObject();
+    rapidjson::Document::AllocatorType& allocator = d.GetAllocator();
+
+    d.AddMember("x", rapidjson::Value(bRect.x), allocator);
+    d.AddMember("y", rapidjson::Value(bRect.y), allocator);
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    d.Accept(writer);
+    std::string data = buffer.GetString();
+    server.write_data(data.c_str(), data.size());
 }
 
 bool HandGesture::detectIfHand() {

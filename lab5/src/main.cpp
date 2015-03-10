@@ -362,7 +362,7 @@ void makeContours(MyImage *m, HandGesture *hg) {
 
 
 int main() {
-    MyImage m(0); HandGesture hg;
+    MyImage m(0);
     init(&m);
     m.cap >> m.src;
     cv::namedWindow("img1", CV_WINDOW_KEEPRATIO);
@@ -375,6 +375,8 @@ int main() {
     SocketServer server;
     server.bind_port();
     server.wait_for_connection();
+
+    HandGesture hg(server);
 
     for(;;) {
         hg.frameNumber++;
