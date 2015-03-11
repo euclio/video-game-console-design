@@ -61,6 +61,8 @@ void HandGesture::printGestureInfo(cv::Mat src) {
 
     d.AddMember("x", rapidjson::Value(bRect.x), allocator);
     d.AddMember("y", rapidjson::Value(bRect.y), allocator);
+    d.AddMember("isHand", rapidjson::Value(isHand), allocator);
+    d.AddMember("fingers", rapidjson::Value(mostFrequentFingerNumber), allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -147,7 +149,7 @@ void HandGesture::addNumberToImg(MyImage *m) {
     float fontSize = 1.5f;
     int fontFace = cv::FONT_HERSHEY_PLAIN;
 
-    for(int i = 0; i < numbers2Display.size(); i++) {
+    for(int i = 1; i < numbers2Display.size(); i++) {
         rectangle(m->src, cv::Point(xPos, yPos), cv::Point(xPos + offset, yPos + offset), numberColor, 2);
         putText(m->src, std::to_string(numbers2Display[i]),
                 cv::Point(xPos + 7, yPos + offset - 3), fontFace, fontSize,
