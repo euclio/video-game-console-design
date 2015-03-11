@@ -26,21 +26,35 @@ PADDLEOFFSET = 20
 # Set up the colours
 BLACK     = (0  ,0  ,0  )
 WHITE     = (255,255,255)
+RED       = (255,  0,  0)
+GREEN     = (0  ,255,  0)
+BLUE      = (0  ,  0,255)
+YELLOW    = (255,255,  0)
 
 LOCALHOST = '127.0.0.1'
 PORT = 9999
 
+# Change the color of the game based on the number of fingers present.
+FINGER_COLORS = {
+    0 : BLACK,
+    1 : RED,
+    2 : BLUE,
+    3 : GREEN,
+    4 : YELLOW,
+    5 : WHITE
+}
+
 #Draws the arena the game will be played in. 
-def drawArena():
+def drawArena(color):
     DISPLAYSURF.fill((0,0,0))
     #Draw outline of arena
-    pygame.draw.rect(DISPLAYSURF, WHITE, ((0,0),(WINDOWWIDTH,WINDOWHEIGHT)), LINETHICKNESS*2)
+    pygame.draw.rect(DISPLAYSURF, color, ((0,0),(WINDOWWIDTH,WINDOWHEIGHT)), LINETHICKNESS*2)
     #Draw centre line
-    pygame.draw.line(DISPLAYSURF, WHITE, ((WINDOWWIDTH/2),0),((WINDOWWIDTH/2),WINDOWHEIGHT), (LINETHICKNESS/4))
+    pygame.draw.line(DISPLAYSURF, color, ((WINDOWWIDTH/2),0),((WINDOWWIDTH/2),WINDOWHEIGHT), (LINETHICKNESS/4))
 
 
 #Draws the paddle
-def drawPaddle(paddle):
+def drawPaddle(color, paddle):
     #Stops paddle moving too low
     if paddle.bottom > WINDOWHEIGHT - LINETHICKNESS:
         paddle.bottom = WINDOWHEIGHT - LINETHICKNESS
@@ -48,12 +62,12 @@ def drawPaddle(paddle):
     elif paddle.top < LINETHICKNESS:
         paddle.top = LINETHICKNESS
     #Draws paddle
-    pygame.draw.rect(DISPLAYSURF, WHITE, paddle)
+    pygame.draw.rect(DISPLAYSURF, color, paddle)
 
 
 #draws the ball
-def drawBall(ball):
-    pygame.draw.rect(DISPLAYSURF, WHITE, ball)
+def drawBall(color, ball):
+    pygame.draw.rect(DISPLAYSURF, color, ball)
 
 #moves the ball returns new position
 def moveBall(ball, ballDirX, ballDirY):
@@ -157,10 +171,10 @@ def main():
     ball = pygame.Rect(ballX, ballY, LINETHICKNESS, LINETHICKNESS)
 
     #Draws the starting position of the Arena
-    drawArena()
-    drawPaddle(paddle1)
-    drawPaddle(paddle2)
-    drawBall(ball)
+    drawArena(WHITE)
+    drawPaddle(WHITE, paddle1)
+    drawPaddle(WHITE, paddle2)
+    drawBall(WHITE, ball)
 
     pygame.mouse.set_visible(0) # make cursor invisible
 
@@ -175,6 +189,8 @@ def main():
     # Keeps track of any yet-unused data from the socket
     last_data = ""
     paused = False
+    color = WHITE
+
 
     while True: #main game loop
         for event in pygame.event.get():
@@ -198,13 +214,19 @@ def main():
         last_data = data
 
         if hand_data:
+            # Move the paddle based on hand position
             paddle1.y = hand_data['y']
-            paused = not hand_data['isHand']
 
-        drawArena()
-        drawPaddle(paddle1)
-        drawPaddle(paddle2)
-        drawBall(ball)
+            num_fingers = hand_data['fingers']
+            color = FINGER_COLORS[num_fingers]
+
+            # Pause if there is no hand present
+            paused = not hand_data['isHand'] or num_fingers == 0
+
+        drawArena(color)
+        drawPaddle(color, paddle1)
+        drawPaddle(color, paddle2)
+        drawBall(color, ball)
 
         if not paused:
             ball = moveBall(ball, ballDirX, ballDirY)
