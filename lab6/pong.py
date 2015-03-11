@@ -2,6 +2,12 @@
 
 # from http://trevorappleton.blogspot.com/2014/04/writing-pong-using-python-and-pygame.html
 
+from __future__ import print_function
+
+import json
+import socket
+import sys
+
 import pygame, sys
 from pygame.locals import *
 
@@ -20,6 +26,9 @@ PADDLEOFFSET = 20
 # Set up the colours
 BLACK     = (0  ,0  ,0  )
 WHITE     = (255,255,255)
+
+LOCALHOST = '127.0.0.1'
+PORT = 9999
 
 #Draws the arena the game will be played in. 
 def drawArena():
@@ -146,15 +155,40 @@ def main():
 
     pygame.mouse.set_visible(0) # make cursor invisible
 
+    sock = socket.socket()
+    try:
+        sock.connect((LOCALHOST, PORT))
+    except Exception as e:
+        print("ERROR: Could not connect to {}:{}".format(LOCALHOST, PORT),
+                file=sys.stderr)
+        sys.exit(1)
+
+    # Keeps track of any yet-unused data from the socket
+    last_data = ""
+
     while True: #main game loop
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            # mouse movement commands
-            elif event.type == MOUSEMOTION:
-                mousex, mousey = event.pos
-                paddle1.y = mousey
+
+        # Read from the socket to determine how much we should move.
+        data = last_data + sock.recv(4096)
+        hand_data = None
+
+        # We only care about the most recent data, so if we get multiple
+        # JSON objects from the socket then we only use the most recent one.
+        if len(data) > 3:
+            packet_size = int(data[:3])
+            while len(data[3:]) > packet_size:
+                raw_json = data[3:3+packet_size]
+                hand_data = json.loads(raw_json)
+                data = data[3 + packet_size:]
+
+        last_data = data
+
+        if hand_data:
+            paddle1.y = hand_data['y']
 
         drawArena()
         drawPaddle(paddle1)
