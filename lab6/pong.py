@@ -13,7 +13,7 @@ from pygame.locals import *
 
 # Number of frames per second
 # Change this value to speed up or slow down your game
-FPS = 60
+FPS = 20
 
 #Global Variables to be used through our program
 
@@ -117,6 +117,15 @@ def displayScore(score):
     resultRect.topleft = (WINDOWWIDTH - 150, 25)
     DISPLAYSURF.blit(resultSurf, resultRect)
 
+def displayPaused(paused):
+    if not paused:
+        return
+
+    resultSurf = BASICFONT.render('PAUSED', True, WHITE)
+    resultRect = resultSurf.get_rect()
+    resultRect.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
+    DISPLAYSURF.blit(resultSurf, resultRect)
+
 #Main function
 def main():
     pygame.init()
@@ -165,6 +174,7 @@ def main():
 
     # Keeps track of any yet-unused data from the socket
     last_data = ""
+    paused = False
 
     while True: #main game loop
         for event in pygame.event.get():
@@ -189,19 +199,22 @@ def main():
 
         if hand_data:
             paddle1.y = hand_data['y']
+            paused = not hand_data['isHand']
 
         drawArena()
         drawPaddle(paddle1)
         drawPaddle(paddle2)
         drawBall(ball)
 
-        ball = moveBall(ball, ballDirX, ballDirY)
-        ballDirX, ballDirY = checkEdgeCollision(ball, ballDirX, ballDirY)
-        score = checkPointScored(paddle1, ball, score, ballDirX)
-        ballDirX = ballDirX * checkHitBall(ball, paddle1, paddle2, ballDirX)
-        paddle2 = artificialIntelligence (ball, ballDirX, paddle2)
+        if not paused:
+            ball = moveBall(ball, ballDirX, ballDirY)
+            ballDirX, ballDirY = checkEdgeCollision(ball, ballDirX, ballDirY)
+            score = checkPointScored(paddle1, ball, score, ballDirX)
+            ballDirX = ballDirX * checkHitBall(ball, paddle1, paddle2, ballDirX)
+            paddle2 = artificialIntelligence (ball, ballDirX, paddle2)
 
         displayScore(score)
+        displayPaused(paused)
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
