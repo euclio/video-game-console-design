@@ -13,6 +13,7 @@
 #include "rapidjson/writer.h"
 
 HandGesture::HandGesture(SocketServer &server) : server(server) {
+    mostFrequentFingerNumber = 0;
     frameNumber = 0;
     nrNoFinger = 0;
     fontFace = cv::FONT_HERSHEY_PLAIN;
