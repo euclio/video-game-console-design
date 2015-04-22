@@ -4,7 +4,8 @@ set(CUDA_PROPAGATE_HOST_FLAGS OFF)
 
 add_executable(chipDJ
     main.cpp
-    median.cpp)
+    median.cpp
+    silhouette.cpp)
 
 target_link_libraries(chipDJ ${OpenCV_LIBS})
 

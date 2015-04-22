@@ -67,20 +67,12 @@ void waitForPalmCover(cv::VideoCapture& input, const std::string& windowName) {
     } while(cv::waitKey(frameDelay) == -1);
 }
 
-std::vector<cv::Scalar> findAverageInRoi(
-        const cv::Mat& frame,
-        const std::vector<cv::Rect>& regionsOfInterest) {
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2HLS);
+cv::Scalar findAverageColor(const cv::Mat& frame,
+                            const cv::Rect& regionOfInterest) {
     std::vector<cv::Mat> channels;
+    cv::Mat roi = frame(regionOfInterest);
 
-    std::vector<cv::Scalar> channelAverages;
-    for (auto& roiRectangle : regionsOfInterest) {
-        cv::Mat roi = frame(roiRectangle);
-        channelAverages.push_back(cv::mean(roi));
-    }
-
-    cv::cvtColor(frame, frame, cv::COLOR_HLS2BGR);
-    return channelAverages;
+    return cv::mean(roi);
 }
 
 cv::Scalar getMedian(const std::vector<cv::Scalar>& values) {
@@ -105,22 +97,25 @@ cv::Scalar getMedian(const std::vector<cv::Scalar>& values) {
     return medians;
 }
 
-cv::Scalar findAverageColorOfHand(cv::VideoCapture& input,
-                                  const std::string& windowName) {
+std::vector<cv::Scalar> findAverageColorOfHand(cv::VideoCapture& input,
+                                               const std::string& windowName) {
     waitForPalmCover(input, windowName);
 
     std::vector<std::vector<int>> channelSamples;
-    cv::Mat frame;
+    cv::Mat frame, hlsFrame;
+
     input >> frame;
+    cv::cvtColor(frame, hlsFrame, cv::COLOR_BGR2HLS);
     auto regionsOfInterest = getRegionsOfInterest(frame);
+    std::vector<cv::Scalar> averages;
     for (auto& roi : regionsOfInterest) {
-        drawRectangle(frame, roi);
+        auto average = findAverageColor(hlsFrame, roi);
+        averages.push_back(average);
     }
     printText(frame, { frame.cols / 2, frame.rows / 10},
-              "Obtaining average color...");
+              "Obtaining averages color...");
     cv::imshow(windowName, frame);
     cv::waitKey(30);
 
-    auto roiChannelAverages = findAverageInRoi(frame, regionsOfInterest);
-    return getMedian(roiChannelAverages);
+    return averages;
 }
