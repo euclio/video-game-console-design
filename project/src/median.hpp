@@ -3,6 +3,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
-void waitForPalmCover(cv::VideoCapture& input);
+cv::Scalar findAverageColorOfHand(cv::VideoCapture& input,
+                                  const std::string& windowName);
 
 #endif  // MEDIAN_HPP
