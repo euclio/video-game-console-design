@@ -1,5 +1,6 @@
 #include <opencv2/highgui/highgui.hpp>
 
+#include "contours.hpp"
 #include "median.hpp"
 #include "silhouette.hpp"
 
@@ -19,8 +20,9 @@ int main() {
     do {
         webcam >> frame;
 
-        cv::imshow("median", frame);
         silhouette = produceSilhouette(frame, colorSamples);
+        frame = findContours(frame, silhouette);
+        cv::imshow("median", frame);
         cv::imshow("silhouette", silhouette);
 
     } while(cv::waitKey(30) != char('q'));
