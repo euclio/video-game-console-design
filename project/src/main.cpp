@@ -1,6 +1,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
-#include "contours.hpp"
+#include "hand.hpp"
+#include "handDetection.hpp"
 #include "median.hpp"
 #include "silhouette.hpp"
 
@@ -21,7 +22,14 @@ int main() {
         webcam >> frame;
 
         silhouette = produceSilhouette(frame, colorSamples);
-        frame = findContours(frame, silhouette);
+        boost::optional<Hand> hand = detectHand(frame, silhouette);
+
+        if (boost::optional<Hand> hand = detectHand(frame, silhouette)) {
+            hand->calculateFingertips();
+            hand->drawFingerTips(frame);
+            hand->drawContours(frame);
+        }
+
         cv::imshow("median", frame);
         cv::imshow("silhouette", silhouette);
 

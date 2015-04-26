@@ -6,9 +6,11 @@ Hand::Hand(const cv::Mat& source,
            const cv::Rect& boundingBox,
            const std::vector<cv::Point>& contours,
            const std::vector<cv::Vec4i>& defects,
-           const std::vector<cv::Point>& hull) :
+           const std::vector<std::vector<cv::Point>>& hull,
+           const size_t biggestContourIndex) :
     isHandDetected(false), fingerTips(), boundingBox(boundingBox),
-    contours(contours), defects(defects), hull(hull), source(source) {}
+    contours(contours), defects(defects), hull(hull), source(source),
+    biggestContourIndex(biggestContourIndex) {}
 
 bool Hand::isHand() {
     return isHandDetected;
@@ -68,7 +70,7 @@ void Hand::checkForOneFinger() {
 
     int n = 0;
 
-    for (auto& hullPoint : hull) {
+    for (auto& hullPoint : hull[biggestContourIndex]) {
         if (hullPoint.y < highestPoint.y + yTol
                 && hullPoint.y != highestPoint.y
                 && hullPoint.x != highestPoint.x) {
@@ -93,9 +95,7 @@ void Hand::drawFingerTips(cv::Mat& source) {
     }
 }
 
-void Hand::drawContours(cv::Mat& source,
-                        const std::vector<std::vector<cv::Point>>& hull,
-                        size_t biggestContourIndex) {
+void Hand::drawContours(cv::Mat& source) {
     cv::drawContours(source, hull, biggestContourIndex,
                      cv::Scalar(0, 0, 250), 10, 8, std::vector<cv::Vec4i>(),
                      0, cv::Point());

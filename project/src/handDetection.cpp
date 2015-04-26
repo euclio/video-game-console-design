@@ -1,4 +1,4 @@
-#include "contours.hpp"
+#include "handDetection.hpp"
 
 #include "hand.hpp"
 
@@ -76,7 +76,8 @@ void eliminateDefects(std::vector<cv::Point>& biggestContour,
     removeRedundantEndpoints(newDefects, biggestContour, boundingRect);
 }
 
-cv::Mat findContours(cv::Mat& source, const cv::Mat& silhouette) {
+boost::optional<Hand> detectHand(cv::Mat& source, const cv::Mat& silhouette) {
+    boost::optional<Hand> hand;
     cv::Mat silhouetteCopy;
     cv::pyrUp(silhouette, silhouetteCopy);
 
@@ -90,7 +91,7 @@ cv::Mat findContours(cv::Mat& source, const cv::Mat& silhouette) {
                 return a.size() < b.size();
             });
     if (biggestContour == contours.end()) {
-        return source;
+        return boost::none;
     }
 
     auto biggestContourIdx = std::distance(contours.begin(), biggestContour);
@@ -119,15 +120,10 @@ cv::Mat findContours(cv::Mat& source, const cv::Mat& silhouette) {
                 *biggestContour, defects[biggestContourIdx], boundingRect);
 
         Hand hand(source, boundingRect, *biggestContour,
-                  defects[biggestContourIdx], pointHull[biggestContourIdx]);
+                  defects[biggestContourIdx], pointHull, biggestContourIdx);
         hand.detectIfHand();
-
-        if (hand.isHand()) {
-            hand.calculateFingertips();
-            hand.drawFingerTips(source);
-            hand.drawContours(source, pointHull, biggestContourIdx);
-        }
+        return hand;
     }
 
-    return source;
+    return boost::none;
 }

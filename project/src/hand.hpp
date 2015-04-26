@@ -12,21 +12,21 @@ class Hand {
              const cv::Rect& boundingBox,
              const std::vector<cv::Point>& contours,
              const std::vector<cv::Vec4i>& defects,
-             const std::vector<cv::Point>& hull);
+             const std::vector<std::vector<cv::Point>>& hull,
+             size_t biggestContourIndex);
         void detectIfHand();
         void calculateFingertips();
         bool isHand();
         void drawFingerTips(cv::Mat& source);
-        void drawContours(cv::Mat& source,
-                          const std::vector<std::vector<cv::Point>>& hull,
-                          size_t biggestContourIndex);
+        void drawContours(cv::Mat& source);
     private:
         bool isHandDetected;
         cv::Mat source;
         std::vector<cv::Point> fingerTips;
         std::vector<cv::Point> contours;
         std::vector<cv::Vec4i> defects;
-        std::vector<cv::Point> hull;
+        std::vector<std::vector<cv::Point>> hull;
+        size_t biggestContourIndex;
         cv::Rect boundingBox;
         void checkForOneFinger();
 };
