@@ -4,6 +4,7 @@
 
 #include "hand.hpp"
 #include "handDetection.hpp"
+#include "interface.hpp"
 #include "median.hpp"
 #include "silhouette.hpp"
 
@@ -22,6 +23,9 @@ int main() {
 
     auto regionsOfInterest = getRegionsOfInterest(frame);
     auto colorSamples = findAverageColorOfHand(webcam, mainWindowName);
+
+    Interface interface(frame);
+
     do {
         webcam >> frame;
 
@@ -34,9 +38,11 @@ int main() {
             hand->drawContours(frame);
         }
 
+        interface.drawInterface(frame);
+
         cv::imshow("silhouette", silhouette);
         cv::imshow(mainWindowName, frame);
-    } while((cv::waitKey(30) & 0xFF) != 'q');
+    } while((cv::waitKey(10) & 0xFF) != 'q');
 
     cv::destroyAllWindows();
     output.release();

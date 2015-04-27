@@ -5,11 +5,14 @@ set(CUDA_PROPAGATE_HOST_FLAGS OFF)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_executable(chipDJ
+    button.cpp
     hand.cpp
     handDetection.cpp
+    interface.cpp
     main.cpp
     median.cpp
-    silhouette.cpp)
+    silhouette.cpp
+)
 
 target_link_libraries(chipDJ ${OpenCV_LIBS})
 
