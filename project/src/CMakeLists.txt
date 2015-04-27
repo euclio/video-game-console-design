@@ -12,6 +12,7 @@ add_executable(chipDJ
     main.cpp
     median.cpp
     silhouette.cpp
+    synthesizer.cpp
 )
 
 target_link_libraries(chipDJ ${OpenCV_LIBS} ${Boost_LIBRARIES})

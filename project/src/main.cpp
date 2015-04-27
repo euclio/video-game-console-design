@@ -8,6 +8,7 @@
 #include "interface.hpp"
 #include "median.hpp"
 #include "silhouette.hpp"
+#include "synthesizer.hpp"
 
 namespace po = boost::program_options;
 
@@ -50,10 +51,13 @@ int main(int argc, char** argv) {
     auto regionsOfInterest = getRegionsOfInterest(frame);
     auto colorSamples = findAverageColorOfHand(webcam, mainWindowName);
 
+    Synthesizer synth;
+
     Interface interface(frame);
-    interface.addListener(0, [] {
-        std::cout << "Activated" << std::endl;
-    });
+    interface.addListener(0, [&synth] { synth.playSquare1(); });
+    interface.addListener(1, [&synth] { synth.playSquare2(); });
+    interface.addListener(2, [&synth] { synth.playTriangle(); });
+    interface.addListener(3, [&synth] { synth.playNoise(); });
 
     do {
         webcam >> frame;
