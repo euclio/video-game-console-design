@@ -11,6 +11,8 @@
 
 namespace po = boost::program_options;
 
+const auto HORIZONTAL_FLIP = 1;
+
 int main(int argc, char** argv) {
     // Set up command line options.
     po::options_description options_description("Allowed options");
@@ -43,6 +45,7 @@ int main(int argc, char** argv) {
 
     cv::Mat frame, silhouette;
     webcam >> frame;
+    cv::flip(frame, frame, HORIZONTAL_FLIP);
 
     auto regionsOfInterest = getRegionsOfInterest(frame);
     auto colorSamples = findAverageColorOfHand(webcam, mainWindowName);
@@ -54,6 +57,8 @@ int main(int argc, char** argv) {
 
     do {
         webcam >> frame;
+
+        cv::flip(frame, frame, HORIZONTAL_FLIP);
 
         silhouette = produceSilhouette(frame, colorSamples);
         boost::optional<Hand> hand = detectHand(frame, silhouette);

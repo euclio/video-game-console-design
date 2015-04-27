@@ -15,6 +15,12 @@ void Interface::checkInteractions(const Hand& hand) {
     for (auto& fingertip : hand.getFingertips()) {
         for (auto& button : buttons) {
             if (button.getBoundingBox().contains(fingertip)) {
+                button.press();
+            } else  {
+                button.release();
+            }
+
+            if (button.isActivated()) {
                 button.notifyListeners();
             }
         }

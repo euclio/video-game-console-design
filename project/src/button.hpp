@@ -9,9 +9,10 @@
 class Button {
     public:
         Button(const cv::Rect& boundingBox, const std::string& text);
-        void activate();
-        void deactivate();
+        void press();
+        void release();
         bool isActivated();
+        bool isLongActivated();
         void drawOn(cv::Mat& frame);
         cv::Rect getBoundingBox() const;
         void addListener(std::function<void()> listener);
@@ -19,7 +20,8 @@ class Button {
     private:
         cv::Rect boundingBox;
         bool activated;
-        std::chrono::system_clock::time_point lastActivated;
+        bool longActivated;
+        int numActivated;
         std::string text;
         std::vector<std::function<void()>> listeners;
 };

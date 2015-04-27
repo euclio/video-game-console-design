@@ -8,6 +8,8 @@
 const auto numSamples = 50;
 const auto frameDelay = 30;
 
+const auto HORIZONTAL_FLIP = 1;
+
 void printText(cv::Mat &img, const cv::Point& origin, const std::string& text) {
     const auto fontFace = cv::FONT_HERSHEY_PLAIN;
     const auto scaleFactor = 1.2f;
@@ -54,6 +56,8 @@ void waitForPalmCover(cv::VideoCapture& input, const std::string& windowName) {
 
     do {
         input >> frame;
+
+        cv::flip(frame, frame, HORIZONTAL_FLIP);
 
         for (auto& roi : regionsOfInterest) {
             drawRectangle(frame, roi);
