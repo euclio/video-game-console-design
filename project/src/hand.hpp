@@ -19,10 +19,11 @@ class Hand {
         bool isHand();
         void drawFingerTips(cv::Mat& source);
         void drawContours(cv::Mat& source);
+        std::vector<cv::Point> getFingertips() const;
     private:
         bool isHandDetected;
         cv::Mat source;
-        std::vector<cv::Point> fingerTips;
+        std::vector<cv::Point> fingertips;
         std::vector<cv::Point> contours;
         std::vector<cv::Vec4i> defects;
         std::vector<std::vector<cv::Point>> hull;

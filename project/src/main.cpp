@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     cv::namedWindow(mainWindowName, CV_WINDOW_NORMAL);
     if (!options.count("nofullscreen")) {
         cv::setWindowProperty(mainWindowName,
-                               CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+                              CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     }
     cv::namedWindow("silhouette");
 
@@ -48,6 +48,9 @@ int main(int argc, char** argv) {
     auto colorSamples = findAverageColorOfHand(webcam, mainWindowName);
 
     Interface interface(frame);
+    interface.addListener(0, [] {
+        std::cout << "Activated" << std::endl;
+    });
 
     do {
         webcam >> frame;
@@ -59,6 +62,8 @@ int main(int argc, char** argv) {
             hand->calculateFingertips();
             hand->drawFingerTips(frame);
             hand->drawContours(frame);
+
+            interface.checkInteractions(*hand);
         }
 
         interface.drawInterface(frame);

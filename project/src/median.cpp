@@ -23,8 +23,8 @@ std::vector<cv::Rect> getRegionsOfInterest(const cv::Mat& frame) {
     std::vector<cv::Rect> regions;
 
     std::vector<cv::Point2d> rectangleOrigins = {
-        { frame.cols / 4.0, frame.rows / 2.0 },
-        { frame.cols / 3.0, frame.rows / 6.0 },
+        { frame.cols / 3.0, frame.rows / 2.0 },
+        { frame.cols / 3.0, frame.rows / 3.0 },
         { frame.cols / 3.0, frame.rows / 1.5 },
         { frame.cols / 2.5, frame.rows / 2.5 },
         { frame.cols / 2.0, frame.rows / 2.0 },

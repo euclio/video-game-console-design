@@ -31,3 +31,17 @@ void Button::drawOn(cv::Mat& frame) {
     cv::putText(frame, text, boundingBox.tl() + cv::Point(10, 20), font,
                 fontScale, red);
 }
+
+cv::Rect Button::getBoundingBox() const {
+    return boundingBox;
+}
+
+void Button::addListener(std::function<void()> listener) {
+    listeners.push_back(listener);
+}
+
+void Button::notifyListeners() {
+    for (auto& listener : listeners) {
+        listener();
+    }
+}
