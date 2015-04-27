@@ -14,7 +14,7 @@ add_executable(chipDJ
     silhouette.cpp
 )
 
-target_link_libraries(chipDJ ${OpenCV_LIBS})
+target_link_libraries(chipDJ ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 set_target_properties(chipDJ
     PROPERTIES
