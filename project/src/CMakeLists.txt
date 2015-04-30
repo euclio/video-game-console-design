@@ -15,8 +15,8 @@ add_executable(chipDJ
     synthesizer.cpp
 )
 
-target_link_libraries(chipDJ ${OpenCV_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(chipDJ ${OpenCV_LIBS} ${Boost_LIBRARIES} ${SFML_LIBRARIES})
 
 set_target_properties(chipDJ
     PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

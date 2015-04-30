@@ -52,12 +52,14 @@ int main(int argc, char** argv) {
     auto colorSamples = findAverageColorOfHand(webcam, mainWindowName);
 
     Synthesizer synth;
+    synth.loadSounds();
 
     Interface interface(frame);
     interface.addListener(0, [&synth] { synth.playSquare1(); });
     interface.addListener(1, [&synth] { synth.playSquare2(); });
     interface.addListener(2, [&synth] { synth.playTriangle(); });
     interface.addListener(3, [&synth] { synth.playNoise(); });
+    interface.addListener(4, [&synth] { synth.playDrums(); });
 
     do {
         webcam >> frame;
